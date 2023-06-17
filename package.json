@@ -1,0 +1,16 @@
+{
+  "name": "weather-forecast-traffic-cam",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Ru Chern CHONG <hello@ruchern.xyz>",
+  "license": "ISC",
+  "scripts": {
+    "build": "lerna run build",
+    "start": "lerna run start --stream",
+    "dev": "lerna run dev --stream"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^7.0.2"
+  }
+}
