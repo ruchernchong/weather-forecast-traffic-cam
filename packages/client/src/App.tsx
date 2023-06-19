@@ -9,7 +9,6 @@ import { DEBOUNCE_WAIT_DURATION } from "./config";
 
 import type { Forecast, TrafficCamera } from "./types";
 
-import "./App.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const App = () => {
