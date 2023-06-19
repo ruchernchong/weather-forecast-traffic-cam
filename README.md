@@ -19,6 +19,18 @@ pnpm install
 pnpm start
 ```
 
+## Usage
+## Update environment variables
+Copy the `.env.example` to `.env` and add the respective API keys
+
+```shell
+cd packages/client/
+cp .env.example .env
+
+cd packages/server/
+cp .env.example .env
+```
+
 ## Resources
 - [Data.gov.sg](https://data.gov.sg)
   - [Traffic Images](https://data.gov.sg/dataset/traffic-images)
