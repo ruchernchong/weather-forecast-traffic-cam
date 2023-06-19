@@ -30,9 +30,7 @@ const App = () => {
     ).format("YYYY-MM-DDTHH:mm:ss");
 
     fetchTrafficCameras({ dateTime: formattedDateTime }).then((cameras) => {
-      if (cameras) {
-        setTrafficCameras(cameras);
-      }
+      setTrafficCameras(cameras);
     });
 
     fetchWeatherForecast({
