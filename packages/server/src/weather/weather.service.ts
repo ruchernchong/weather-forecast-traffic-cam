@@ -17,11 +17,11 @@ export class WeatherService {
       )
       .then(({ data }: AxiosResponse<WeatherResponse>) => {
         const areaMetadata = data.area_metadata;
-        const weatherForecasts = data.items.find(
+        const forecasts = data.items.find(
           ({ forecasts }) => forecasts,
         ).forecasts;
 
-        return weatherForecasts.map((forecast) => {
+        return forecasts.map((forecast) => {
           const { label_location } = areaMetadata.find(
             (metadata) => forecast.area === metadata.name,
           );

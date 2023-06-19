@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { TrafficService } from './traffic.service';
-import { Observable } from 'rxjs';
 import { TrafficCamera } from '../interfaces';
 
 @Controller('traffic')
@@ -25,9 +24,7 @@ export class TrafficController {
   }
 
   @Get(':id')
-  getTrafficCameraById(
-    @Param('id') id: string,
-  ): Promise<Observable<TrafficCamera>> {
+  getTrafficCameraById(@Param('id') id: string): Promise<TrafficCamera> {
     return this.trafficService.getTrafficCameraById(id);
   }
 }

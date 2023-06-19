@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { EMPTY, of } from 'rxjs';
 import { filterByUniqueLocation, sortFormattedAddress } from '../utils';
 
 import { Location, TrafficCamera } from '../interfaces';
@@ -12,7 +11,7 @@ export class TrafficService {
 
   API_URL = `https://api.data.gov.sg/v1`;
 
-  getLocationFromCoordinates(location: Location) {
+  getLocationFromCoordinates(location: Location): Promise<string> {
     return this.httpService.axiosRef
       .get(`https://maps.googleapis.com/maps/api/geocode/json`, {
         params: {
@@ -51,15 +50,9 @@ export class TrafficService {
     return cameras;
   }
 
-  async getTrafficCameraById(id: string) {
-    const camera: TrafficCamera = this.cameras.find(
+  async getTrafficCameraById(id: string): Promise<TrafficCamera> {
+    return this.cameras.find(
       ({ camera_id }: Pick<TrafficCamera, 'camera_id'>) => camera_id === id,
     );
-
-    if (camera) {
-      return of(camera);
-    }
-
-    return EMPTY;
   }
 }
