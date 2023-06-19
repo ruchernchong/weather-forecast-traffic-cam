@@ -3,17 +3,16 @@ import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 
 import { Weather, WeatherResponse } from '../interfaces';
+import { DATA_GOV_SG_API_URL } from '../config';
 
 @Injectable()
 export class WeatherService {
   constructor(private readonly httpService: HttpService) {}
 
-  API_URL = `https://api.data.gov.sg/v1`;
-
   getForecasts(dateTime: string): Promise<Weather[]> {
     return this.httpService.axiosRef
       .get(
-        `${this.API_URL}/environment/2-hour-weather-forecast?date_time=${dateTime}`,
+        `${DATA_GOV_SG_API_URL}/environment/2-hour-weather-forecast?date_time=${dateTime}`,
       )
       .then(({ data }: AxiosResponse<WeatherResponse>) => {
         const areaMetadata = data.area_metadata;

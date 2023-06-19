@@ -3,13 +3,12 @@ import { HttpService } from '@nestjs/axios';
 import { filterByUniqueLocation, sortFormattedAddress } from '../utils';
 
 import { Location, TrafficCamera } from '../interfaces';
+import { DATA_GOV_SG_API_URL } from '../config';
 
 @Injectable()
 export class TrafficService {
   constructor(private readonly httpService: HttpService) {}
   private cameras: TrafficCamera[] = [];
-
-  API_URL = `https://api.data.gov.sg/v1`;
 
   getLocationFromCoordinates(location: Location): Promise<string> {
     return this.httpService.axiosRef
@@ -24,7 +23,9 @@ export class TrafficService {
 
   async getTrafficCameras(dateTime?: string): Promise<TrafficCamera[]> {
     const cameras = await this.httpService.axiosRef
-      .get(`${this.API_URL}/transport/traffic-images?date_time=${dateTime}`)
+      .get(
+        `${DATA_GOV_SG_API_URL}/transport/traffic-images?date_time=${dateTime}`,
+      )
       .then(async ({ data }) => {
         const cameras: TrafficCamera[] = data.items.find(
           ({ cameras }) => cameras,
