@@ -7,7 +7,8 @@ import {
 } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
-import { Weather } from '../interfaces/weather.interface';
+
+import { Weather } from '../interfaces';
 
 @Controller('weather')
 @UseInterceptors(CacheInterceptor)

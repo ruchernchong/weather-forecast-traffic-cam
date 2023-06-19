@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { TrafficService } from './traffic.service';
-import { TrafficCamera } from '../interfaces/traffic.interface';
 import { Observable } from 'rxjs';
+import { TrafficCamera } from '../interfaces';
 
 @Controller('traffic')
 @UseInterceptors(CacheInterceptor)

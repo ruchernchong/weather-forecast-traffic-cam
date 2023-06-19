@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { EMPTY, of } from 'rxjs';
 import { filterByUniqueLocation, sortFormattedAddress } from '../utils';
-import { Location, TrafficCamera } from '../interfaces/traffic.interface';
+
+import { Location, TrafficCamera } from '../interfaces';
 
 @Injectable()
 export class TrafficService {

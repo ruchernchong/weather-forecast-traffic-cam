@@ -1,4 +1,4 @@
-import { TrafficCamera } from '../interfaces/traffic.interface';
+import { TrafficCamera } from '../interfaces';
 
 export const filterByUniqueLocation = (locations: TrafficCamera[]) => [
   ...new Map(

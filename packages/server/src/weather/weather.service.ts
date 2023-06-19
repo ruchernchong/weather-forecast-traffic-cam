@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
-import { Weather, WeatherResponse } from '../interfaces/weather.interface';
+
+import { Weather, WeatherResponse } from '../interfaces';
 
 @Injectable()
 export class WeatherService {
