@@ -7,17 +7,9 @@ type QueryParam = {
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchTrafficCameras = async ({ dateTime }: QueryParam) => {
-  try {
-    return fetchFromApi(`${API_URL}/traffic`, { dateTime });
-  } catch (e) {
-    console.error(e);
-  }
+  return fetchFromApi(`${API_URL}/traffic`, { dateTime });
 };
 
 export const fetchWeatherForecast = async ({ dateTime }: QueryParam) => {
-  try {
-    return fetchFromApi(`${API_URL}/weather`, { dateTime });
-  } catch (e) {
-    console.error(e);
-  }
+  return fetchFromApi(`${API_URL}/weather`, { dateTime });
 };
