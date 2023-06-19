@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { Weather } from '../interfaces/weather.interface';
 
 @Controller('weather')
 @UseInterceptors(CacheInterceptor)
@@ -15,7 +16,7 @@ export class WeatherController {
 
   @Get()
   @Header('Cache-Control', 'public,max-age:86400')
-  getForecasts(@Query('dateTime') dateTime: string) {
+  getForecasts(@Query('dateTime') dateTime: string): Promise<Weather[]> {
     return this.weatherService.getForecasts(dateTime);
   }
 }
