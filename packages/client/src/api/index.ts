@@ -22,16 +22,6 @@ export const fetchTrafficCameras = async ({
   }
 };
 
-export const fetchTrafficCameraById = async ({ cameraId, dateTime }) => {
-  try {
-    return fetch(`${API_URL}/traffic/${cameraId}?dateTime=${dateTime}`).then(
-      (res) => res.json()
-    );
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 export const fetchWeatherForecast = async ({
   dateTime,
 }: QueryParam): Promise<Forecast[] | undefined> => {

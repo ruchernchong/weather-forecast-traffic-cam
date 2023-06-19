@@ -1,11 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import debounce from "lodash/debounce";
-import {
-  fetchTrafficCameraById,
-  fetchTrafficCameras,
-  fetchWeatherForecast,
-} from "./api";
+import { fetchTrafficCameras, fetchWeatherForecast } from "./api";
 import Layout from "./components/Layout.tsx";
 import TrafficSection from "./components/TrafficSection.tsx";
 import WeatherSection from "./components/WeatherSection.tsx";
