@@ -3,6 +3,7 @@
 ## Installation
 `pnpm` is required for this.
 
+### Install `pnpm`
 ```shell
 # For Node >16
 corepack enable
@@ -11,16 +12,15 @@ corepack prepare pnpm@<version> --activate
 # For Node <16
 npm install -g pnpm
 ```
-
+### Install packages
 ```shell
 # Install the packages
 pnpm install
-# Start both the server and client
-pnpm start
+
 ```
 
 ## Usage
-## Update environment variables
+### Update environment variables
 Copy the `.env.example` to `.env` and add the respective API keys
 
 ```shell
@@ -29,6 +29,12 @@ cp .env.example .env
 
 cd packages/server/
 cp .env.example .env
+```
+
+### Starting the environment
+```shell
+# Start both the server and client
+pnpm start
 ```
 
 ## Resources
