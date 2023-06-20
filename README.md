@@ -1,5 +1,7 @@
 # Weather Forecast & Traffic Cam
 
+![Screenshot](assets/screenshot.png)
+
 ## Installation
 `pnpm` is required for this.
 
