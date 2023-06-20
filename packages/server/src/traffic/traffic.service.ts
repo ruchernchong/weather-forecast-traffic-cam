@@ -41,11 +41,15 @@ export class TrafficService {
           .cameras.slice(0, 20);
 
         const addressTable = await this.addressRepository.find();
-        const isAddressUpdated = addressTable.every(({ displayName }) =>
-          Boolean(displayName),
+        const isAddressUpdated = addressTable.every(
+          ({ displayName }) => displayName,
         );
 
-        if (addressTable.length === 0 || !isAddressUpdated) {
+        if (
+          addressTable.length === 0 ||
+          cameras.length !== addressTable.length ||
+          !isAddressUpdated
+        ) {
           await Promise.all(
             cameras.map(async (camera) => {
               const displayName: string = await this.getLocationFromCoordinates(
