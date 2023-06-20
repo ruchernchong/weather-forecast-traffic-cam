@@ -16,14 +16,27 @@ npm install -g pnpm
 ```shell
 # Install the packages
 pnpm install
-
 ```
 
 ## Usage
 
-### Starting the environment
+### Starting the both the server and client simultaneously
 ```shell
-# Start both the server and client
+# Starts both the server and client
+pnpm start
+```
+
+## Starting the server only
+```shell
+# Starts only the server
+cd packages/server
+pnpm start
+```
+
+## Starting the client only
+```shell
+# Starts only the client
+cd packages/client
 pnpm start
 ```
 
@@ -31,4 +44,4 @@ pnpm start
 - [Data.gov.sg](https://data.gov.sg)
   - [Traffic Images](https://data.gov.sg/dataset/traffic-images)
   - [Weather Forecast](https://data.gov.sg/dataset/weather-forecast)
-- [Google Geocoding API](https://developers.google.com/maps/documentation/geocoding/overview)
+- [Nominatim API by OpenStreetMap](https://nominatim.org/release-docs/latest/api/Reverse)
