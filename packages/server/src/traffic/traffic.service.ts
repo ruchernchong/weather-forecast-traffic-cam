@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { filterByUniqueLocation, sortFormattedAddress } from '../utils';
 
 import { Location, TrafficCamera } from '../interfaces';
-import { DATA_GOV_SG_API_URL } from '../config';
+import { DATA_GOV_SG_API_URL, OPENSTREETMAP_API_URL } from '../config';
 
 @Injectable()
 export class TrafficService {
@@ -12,13 +12,14 @@ export class TrafficService {
 
   getLocationFromCoordinates(location: Location): Promise<string> {
     return this.httpService.axiosRef
-      .get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+      .get(`${OPENSTREETMAP_API_URL}/reverse`, {
         params: {
-          latlng: `${location.latitude},${location.longitude}`,
-          key: process.env.GOOGLE_MAP_API_KEY,
+          lat: location.latitude,
+          lon: location.longitude,
+          format: 'json',
         },
       })
-      .then(({ data }) => data.results[0].formatted_address);
+      .then(({ data }) => data.display_name);
   }
 
   async getTrafficCameras(dateTime?: string): Promise<TrafficCamera[]> {
