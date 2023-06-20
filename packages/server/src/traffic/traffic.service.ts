@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { filterByUniqueLocation, sortFormattedAddress } from '../utils';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AddressEntity } from '../address/addressEntity';
 
-import { Location, TrafficCamera } from '../interfaces';
 import { DATA_GOV_SG_API_URL, OPENSTREETMAP_API_URL } from '../config';
+import { Location, TrafficCamera } from '../interfaces';
+import { filterByUniqueLocation, sortFormattedAddress } from '../utils';
 
 @Injectable()
 export class TrafficService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    @InjectRepository(AddressEntity)
+    private addressRepository: Repository<AddressEntity>,
+    private readonly httpService: HttpService,
+  ) {}
   private cameras: TrafficCamera[] = [];
 
   getLocationFromCoordinates(location: Location): Promise<string> {
@@ -22,34 +29,51 @@ export class TrafficService {
       .then(({ data }) => data.display_name);
   }
 
-  async getTrafficCameras(dateTime?: string): Promise<TrafficCamera[]> {
-    const cameras = await this.httpService.axiosRef
+  async getTrafficCameras(dateTime?: string) {
+    this.cameras = await this.httpService.axiosRef
       .get(
         `${DATA_GOV_SG_API_URL}/transport/traffic-images?date_time=${dateTime}`,
       )
       .then(async ({ data }) => {
-        const cameras: TrafficCamera[] = data.items.find(
-          ({ cameras }) => cameras,
-        ).cameras;
+        const cameras: TrafficCamera[] = data.items
+          .find(({ cameras }) => cameras)
+          .cameras.slice(0, 20);
+
+        const addressTable = await this.addressRepository.find();
+        const isAddressUpdated = addressTable.every(({ displayName }) =>
+          Boolean(displayName),
+        );
+
+        if (addressTable.length === 0 || !isAddressUpdated) {
+          await Promise.all(
+            cameras.map(async (camera) => {
+              const displayName: string = await this.getLocationFromCoordinates(
+                camera.location,
+              );
+
+              const address = new AddressEntity();
+              address.cameraId = camera.camera_id;
+              address.displayName = displayName;
+              return this.addressRepository.save(address);
+            }),
+          );
+        }
 
         return filterByUniqueLocation(
-          await Promise.all(
-            // I need to truncate the number of locations for the demo as I have already racked up almost >US$500 of API calls to the Google Geocoding API while trying to get the caching mechanism working
-            cameras.slice(0, 5).map(async (camera) => {
-              const formattedAddress: string =
-                await this.getLocationFromCoordinates(camera.location);
-              return {
-                ...camera,
-                formattedAddress,
-              };
-            }),
-          ),
+          cameras.map((camera) => {
+            const formattedAddress = addressTable.find(
+              ({ cameraId }) => camera.camera_id === cameraId,
+            )?.displayName;
+
+            return {
+              ...camera,
+              formattedAddress,
+            };
+          }),
         ).sort(sortFormattedAddress);
       });
 
-    this.cameras = cameras;
-
-    return cameras;
+    return this.cameras;
   }
 
   async getTrafficCameraById(id: string): Promise<TrafficCamera> {
