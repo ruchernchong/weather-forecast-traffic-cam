@@ -5,9 +5,10 @@ import { fetchTrafficCameras, fetchWeatherForecast } from "./api";
 import Layout from "./components/Layout.tsx";
 import TrafficSection from "./components/TrafficSection.tsx";
 import WeatherSection from "./components/WeatherSection.tsx";
+
 import { DEBOUNCE_WAIT_DURATION } from "./config";
 
-import type { Forecast, TrafficCamera } from "./types";
+import type { DateTime, Forecast, TrafficCamera } from "./types";
 
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -15,27 +16,29 @@ const App = () => {
   const dateNow = dayjs().format("YYYY-MM-DD");
   const timeNow = dayjs().format("HH:mm");
 
-  const [dateTime, setDateTime] = useState<{ date: string; time: string }>({
+  const [dateTime, setDateTime] = useState<DateTime>({
     date: dateNow,
     time: timeNow,
   });
   const [trafficCameras, setTrafficCameras] = useState<TrafficCamera[]>([]);
-  const [weatherForecasts, setWeatherForecasts] = useState<Forecast[]>();
+  const [weatherForecasts, setWeatherForecasts] = useState<Forecast[]>([]);
   const [selectedTrafficCamera, setSelectedTrafficCamera] =
     useState<TrafficCamera>();
 
   useEffect(() => {
-    const formattedDateTime = dayjs(
+    const formattedDateTime: string = dayjs(
       `${dateTime?.date} ${dateTime?.time}`
     ).format("YYYY-MM-DDTHH:mm:ss");
 
-    fetchTrafficCameras({ dateTime: formattedDateTime }).then((cameras) => {
+    fetchTrafficCameras({
+      dateTime: formattedDateTime,
+    }).then((cameras: TrafficCamera[]) => {
       setTrafficCameras(cameras);
     });
 
     fetchWeatherForecast({
       dateTime: formattedDateTime,
-    }).then((weatherForecast) => {
+    }).then((weatherForecast: Forecast[]) => {
       setWeatherForecasts(weatherForecast);
     });
   }, [dateTime?.date, dateTime?.time]);
@@ -48,27 +51,31 @@ const App = () => {
 
   const handleLocationChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
-      const selectedTrafficCamera = trafficCameras?.find(
-        ({ formattedAddress }) => formattedAddress === e.target.value
+      const selectedTrafficCamera = trafficCameras.find(
+        ({ formattedAddress }: Pick<TrafficCamera, "formattedAddress">) =>
+          formattedAddress === e.target.value
       );
       setSelectedTrafficCamera(selectedTrafficCamera);
     },
     [trafficCameras]
   );
 
-  const handleDateTimeChange = debounce((value) => {
-    setDateTime((prevState) => ({
-      ...prevState,
-      ...value,
-    }));
-  }, DEBOUNCE_WAIT_DURATION);
+  const handleDateTimeChange = debounce(
+    (dateTime: { date: string } | { time: string }) => {
+      setDateTime((prevState: DateTime) => ({
+        ...prevState,
+        ...dateTime,
+      }));
+    },
+    DEBOUNCE_WAIT_DURATION
+  );
 
   useEffect(() => {
-    let updatedTrafficCamera;
+    let updatedTrafficCamera: TrafficCamera | undefined;
 
     if (selectedTrafficCamera) {
       updatedTrafficCamera = trafficCameras.find(
-        ({ formattedAddress }) =>
+        ({ formattedAddress }: Pick<TrafficCamera, "formattedAddress">) =>
           formattedAddress === selectedTrafficCamera.formattedAddress
       );
     }

@@ -3,7 +3,7 @@ import Card from "./Card.tsx";
 import type { Forecast } from "../types";
 
 type WeatherForecastProps = {
-  forecasts?: Forecast[];
+  forecasts: Forecast[];
 };
 
 const WeatherSection = ({ forecasts }: WeatherForecastProps) => {

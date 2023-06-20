@@ -1,8 +1,7 @@
-export const fetchFromApi = async (
-  url: string,
-  params?: { [key: string]: any }
-) => {
-  let queryParams;
+import { QueryParam } from "../types";
+
+export const fetchFromApi = async (url: string, params?: QueryParam) => {
+  let queryParams: string | undefined;
 
   if (params) {
     queryParams = Object.entries(params)

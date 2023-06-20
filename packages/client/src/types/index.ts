@@ -22,3 +22,12 @@ export type Forecast = {
   area: string;
   forecast: string;
 };
+
+export type DateTime = {
+  date: string;
+  time: string;
+};
+
+export type QueryParam = {
+  [key: string]: string;
+};
