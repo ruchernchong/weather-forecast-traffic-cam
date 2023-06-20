@@ -28,19 +28,21 @@ pnpm install
 pnpm start
 ```
 
-## Starting the server only
+### Starting the server only
 ```shell
 # Starts only the server
 cd packages/server
 pnpm start
 ```
 
-## Starting the client only
+### Starting the client only
 ```shell
 # Starts only the client
 cd packages/client
 pnpm start
 ```
+
+
 
 ## Resources
 - [Data.gov.sg](https://data.gov.sg)
