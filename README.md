@@ -41,7 +41,13 @@ pnpm start
 cd packages/client
 pnpm start
 ```
+## Tech Stacks
 
+- Vite + React.js (Frontend aka client)
+- NestJS (Backend aka server)
+- Tailwind CSS
+- Lerna (Monorepo)
+- pnpm (alternative package manager to `npm` or `yarn`)
 
 
 ## Resources
