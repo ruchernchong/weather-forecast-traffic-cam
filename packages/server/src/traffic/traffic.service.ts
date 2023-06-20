@@ -37,6 +37,7 @@ export class TrafficService {
       .then(async ({ data }) => {
         const cameras: TrafficCamera[] = data.items
           .find(({ cameras }) => cameras)
+          // For demo purposes, I will slice the dataset into smaller one
           .cameras.slice(0, 20);
 
         const addressTable = await this.addressRepository.find();
