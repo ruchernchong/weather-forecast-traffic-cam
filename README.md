@@ -26,9 +26,6 @@ Copy the `.env.example` to `.env` and add the respective API keys
 ```shell
 cd packages/client/
 cp .env.example .env
-
-cd packages/server/
-cp .env.example .env
 ```
 
 ### Starting the environment
