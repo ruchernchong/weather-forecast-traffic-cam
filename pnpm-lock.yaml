@@ -89,7 +89,7 @@ importers:
     dependencies:
       '@nestjs/axios':
         specifier: ^3.0.0
-        version: 3.0.0(@nestjs/common@9.0.5)(axios@1.4.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+        version: 3.0.0(@nestjs/common@9.0.5)(axios@1.6.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/cache-manager':
         specifier: ^2.0.0
         version: 2.0.0(@nestjs/common@9.0.5)(cache-manager@5.2.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
@@ -109,8 +109,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(@nestjs/common@9.0.5)(@nestjs/core@9.0.5)(reflect-metadata@0.1.13)(rxjs@7.8.1)(typeorm@0.3.16)
       axios:
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.6.0
+        version: 1.6.0
       cache-manager:
         specifier: ^5.2.3
         version: 5.2.3
@@ -1215,7 +1215,7 @@ packages:
       - supports-color
     dev: false
 
-  /@nestjs/axios@3.0.0(@nestjs/common@9.0.5)(axios@1.4.0)(reflect-metadata@0.1.13)(rxjs@7.8.1):
+  /@nestjs/axios@3.0.0(@nestjs/common@9.0.5)(axios@1.6.0)(reflect-metadata@0.1.13)(rxjs@7.8.1):
     resolution: {integrity: sha512-ULdH03jDWkS5dy9X69XbUVbhC+0pVnrRcj7bIK/ytTZ76w7CgvTZDJqsIyisg3kNOiljRW/4NIjSf3j6YGvl+g==}
     peerDependencies:
       '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -1224,7 +1224,7 @@ packages:
       rxjs: ^6.0.0 || ^7.0.0
     dependencies:
       '@nestjs/common': 9.0.5(cache-manager@5.2.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      axios: 1.4.0
+      axios: 1.6.0
       reflect-metadata: 0.1.13
       rxjs: 7.8.1
     dev: false
@@ -2775,16 +2775,6 @@ packages:
       postcss-value-parser: 4.2.0
     dev: true
 
-  /axios@1.4.0:
-    resolution: {integrity: sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==}
-    dependencies:
-      follow-redirects: 1.15.2
-      form-data: 4.0.0
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
   /axios@1.6.0:
     resolution: {integrity: sha512-EZ1DYihju9pwVB+jg67ogm+Tmqc6JmhamRN6I4Zt8DfZu5lbcQGw3ozH9lFejSJgs/ibaef3A9PMXPLeefFGJg==}
     dependencies:
@@ -2793,7 +2783,6 @@ packages:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
-    dev: true
 
   /babel-jest@29.5.0(@babel/core@7.22.5):
     resolution: {integrity: sha512-mA4eCDh5mSo2EcA9xQjVTpmbbNk32Zb3Q3QFQsNhaK56Q+yoXowzFodLux30HRgyOho5rsQ6B0P9QpMkvvnJ0Q==}
