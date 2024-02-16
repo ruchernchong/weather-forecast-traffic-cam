@@ -4,7 +4,13 @@ import { WeatherController } from './weather.controller';
 import { WeatherService } from './weather.service';
 
 @Module({
-  imports: [HttpModule],
+  imports: [
+    HttpModule.register({
+      headers: {
+        'User-Agent': 'Weather Forecast Traffic Cam',
+      },
+    }),
+  ],
   controllers: [WeatherController],
   providers: [WeatherService],
 })

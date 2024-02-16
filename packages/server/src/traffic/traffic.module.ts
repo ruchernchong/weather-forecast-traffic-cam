@@ -1,12 +1,19 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
 import { TrafficController } from './traffic.controller';
 import { TrafficService } from './traffic.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AddressEntity } from '../address/addressEntity';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Address, AddressSchema } from './schemas/address.schema';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [HttpModule, TypeOrmModule.forFeature([AddressEntity])],
+  imports: [
+    HttpModule.register({
+      headers: {
+        'User-Agent': 'Weather Forecast Traffic Cam',
+      },
+    }),
+    MongooseModule.forFeature([{ name: Address.name, schema: AddressSchema }]),
+  ],
   controllers: [TrafficController],
   providers: [TrafficService],
 })

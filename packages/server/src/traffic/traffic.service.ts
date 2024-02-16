@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { AddressEntity } from '../address/addressEntity';
-
 import { DATA_GOV_SG_API_URL, OPENSTREETMAP_API_URL } from '../config';
 import { Location, TrafficCamera } from '../interfaces';
 import { filterByUniqueLocation, sortFormattedAddress } from '../utils';
+import { InjectModel } from '@nestjs/mongoose';
+import { Address } from './schemas/address.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class TrafficService {
   constructor(
-    @InjectRepository(AddressEntity)
-    private addressRepository: Repository<AddressEntity>,
+    @InjectModel(Address.name) private addressModel: Model<Address>,
     private readonly httpService: HttpService,
   ) {}
   private cameras: TrafficCamera[] = [];
@@ -29,7 +27,7 @@ export class TrafficService {
       .then(({ data }) => data.display_name);
   }
 
-  async getTrafficCameras(dateTime?: string) {
+  async getTrafficCameras(dateTime?: string): Promise<TrafficCamera[]> {
     this.cameras = await this.httpService.axiosRef
       .get(
         `${DATA_GOV_SG_API_URL}/transport/traffic-images?date_time=${dateTime}`,
@@ -40,34 +38,36 @@ export class TrafficService {
           // For demo purposes, I will slice the dataset into smaller one
           .cameras.slice(0, 20);
 
-        const addressTable = await this.addressRepository.find();
-        const isAddressUpdated = addressTable.every(
-          ({ displayName }) => displayName,
-        );
+        const addressTable = await this.addressModel.find().exec();
+        // const isAddressUpdated = addressTable.every(
+        //   ({ displayName }) => displayName,
+        // );
 
-        if (
-          addressTable.length === 0 ||
-          cameras.length !== addressTable.length ||
-          !isAddressUpdated
-        ) {
-          await Promise.all(
-            cameras.map(async (camera) => {
-              const displayName: string = await this.getLocationFromCoordinates(
-                camera.location,
-              );
-
-              const address = new AddressEntity();
-              address.cameraId = camera.camera_id;
-              address.displayName = displayName;
-              return this.addressRepository.save(address);
-            }),
-          );
-        }
+        // if (
+        //   addressTable.length === 0 ||
+        //   cameras.length !== addressTable.length ||
+        //   !isAddressUpdated
+        // ) {
+        //   await Promise.all(
+        //     cameras.map(async (camera) => {
+        //       const displayName: string = await this.getLocationFromCoordinates(
+        //         camera.location,
+        //       );
+        //
+        //       const address = new this.addressModel({
+        //         cameraId: camera.camera_id,
+        //         displayName,
+        //       });
+        //
+        //       return address.save();
+        //     }),
+        //   );
+        // }
 
         return filterByUniqueLocation(
           cameras.map((camera) => {
             const formattedAddress = addressTable.find(
-              ({ cameraId }) => camera.camera_id === cameraId,
+              (address) => camera.camera_id === address.cameraId,
             )?.displayName;
 
             return {
@@ -76,6 +76,10 @@ export class TrafficService {
             };
           }),
         ).sort(sortFormattedAddress);
+      })
+      .catch((error) => {
+        console.error(error);
+        return [];
       });
 
     return this.cameras;
