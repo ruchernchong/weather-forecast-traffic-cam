@@ -14,7 +14,7 @@ import { AddressEntity } from './address/addressEntity';
     TypeOrmModule.forRoot({
       autoLoadEntities: true,
       type: 'sqlite',
-      database: 'address.db',
+      database: './src/address.db',
       entities: [AddressEntity],
       synchronize: true,
     }),
