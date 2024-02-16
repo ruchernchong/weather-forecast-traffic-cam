@@ -1,16 +1,16 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, Suspense } from "react";
 import TrafficImage from "./TrafficImage.tsx";
 import type { TrafficCamera } from "../types";
 import Skeleton from "react-loading-skeleton";
 
-type TrafficSectionProps = {
+interface TrafficSectionProps {
   dateNow: string;
   timeNow: string;
   handleDateTimeChange: (e: { date: string } | { time: string }) => void;
   handleLocationChange: (e: ChangeEvent<HTMLSelectElement>) => void;
   trafficCameras: TrafficCamera[];
   selectedTrafficCamera?: TrafficCamera;
-};
+}
 
 const TrafficSection = ({
   dateNow,
@@ -66,11 +66,15 @@ const TrafficSection = ({
       </div>
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-12">
-          {selectedTrafficCamera ? (
-            <TrafficImage camera={selectedTrafficCamera} />
-          ) : (
-            <Skeleton height={360} className="rounded-xl shadow-md" />
-          )}
+          <Suspense
+            fallback={
+              <Skeleton height={360} className="rounded-xl shadow-md" />
+            }
+          >
+            {selectedTrafficCamera && (
+              <TrafficImage camera={selectedTrafficCamera} />
+            )}
+          </Suspense>
         </div>
       </div>
     </section>

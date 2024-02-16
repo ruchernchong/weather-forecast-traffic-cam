@@ -28,6 +28,4 @@ export type DateTime = {
   time: string;
 };
 
-export type QueryParam = {
-  [key: string]: string;
-};
+export type QueryParam = Record<string, string>;

@@ -10,8 +10,6 @@ import { DEBOUNCE_WAIT_DURATION } from "./config";
 
 import type { DateTime, Forecast, TrafficCamera } from "./types";
 
-import "react-loading-skeleton/dist/skeleton.css";
-
 const App = () => {
   const dateNow = dayjs().format("YYYY-MM-DD");
   const timeNow = dayjs().format("HH:mm");
@@ -26,8 +24,8 @@ const App = () => {
     useState<TrafficCamera>();
 
   useEffect(() => {
-    const formattedDateTime: string = dayjs(
-      `${dateTime?.date} ${dateTime?.time}`
+    const formattedDateTime = dayjs(
+      `${dateTime?.date} ${dateTime?.time}`,
     ).format("YYYY-MM-DDTHH:mm:ss");
 
     fetchTrafficCameras({
@@ -44,7 +42,7 @@ const App = () => {
   }, [dateTime?.date, dateTime?.time]);
 
   useEffect(() => {
-    if (!selectedTrafficCamera) {
+    if (!selectedTrafficCamera && trafficCameras.length > 0) {
       setSelectedTrafficCamera(trafficCameras[0]);
     }
   }, [selectedTrafficCamera, trafficCameras]);
@@ -52,22 +50,21 @@ const App = () => {
   const handleLocationChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       const selectedTrafficCamera = trafficCameras.find(
-        ({ formattedAddress }: Pick<TrafficCamera, "formattedAddress">) =>
-          formattedAddress === e.target.value
+        ({ formattedAddress }) => formattedAddress === e.target.value,
       );
       setSelectedTrafficCamera(selectedTrafficCamera);
     },
-    [trafficCameras]
+    [trafficCameras],
   );
 
   const handleDateTimeChange = debounce(
     (dateTime: { date: string } | { time: string }) => {
-      setDateTime((prevState: DateTime) => ({
+      setDateTime((prevState) => ({
         ...prevState,
         ...dateTime,
       }));
     },
-    DEBOUNCE_WAIT_DURATION
+    DEBOUNCE_WAIT_DURATION,
   );
 
   useEffect(() => {
@@ -76,7 +73,7 @@ const App = () => {
     if (selectedTrafficCamera) {
       updatedTrafficCamera = trafficCameras.find(
         ({ formattedAddress }: Pick<TrafficCamera, "formattedAddress">) =>
-          formattedAddress === selectedTrafficCamera.formattedAddress
+          formattedAddress === selectedTrafficCamera.formattedAddress,
       );
     }
 

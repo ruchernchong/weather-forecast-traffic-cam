@@ -1,8 +1,8 @@
 import type { TrafficCamera } from "../types";
 
-type TrafficImageProps = {
+interface TrafficImageProps {
   camera: TrafficCamera;
-};
+}
 
 const TrafficImage = ({ camera }: TrafficImageProps) => {
   const { image, image_metadata: metadata } = camera;

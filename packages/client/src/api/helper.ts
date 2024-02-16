@@ -1,27 +1,23 @@
 import { QueryParam } from "../types";
 
 export const fetchFromApi = async (url: string, params?: QueryParam) => {
-  let queryParams: string | undefined;
+  const urlObject = new URL(url);
 
   if (params) {
-    queryParams = Object.entries(params)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
-  }
-
-  if (queryParams) {
-    url = `${url}?${queryParams}`;
+    urlObject.search = new URLSearchParams(params).toString();
   }
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(urlObject.toString());
 
-    if (response.ok) {
-      return response.json();
-    } else {
-      return [];
+    if (!response.ok) {
+      console.error(`Failed to fetch from ${urlObject.toString()}`);
+      return;
     }
-  } catch (e) {
-    console.error(e);
+
+    return response.json();
+  } catch (error) {
+    console.error(`Error while fetching from ${url}`, error);
+    return;
   }
 };

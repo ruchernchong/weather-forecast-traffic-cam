@@ -2,14 +2,12 @@ import { fetchFromApi } from "./helper.ts";
 import { API_URL } from "../config";
 import type { Forecast, QueryParam, TrafficCamera } from "../types";
 
-export const fetchTrafficCameras = async ({
+export const fetchTrafficCameras = ({
   dateTime,
-}: QueryParam): Promise<TrafficCamera[]> => {
-  return fetchFromApi(`${API_URL}/traffic`, { dateTime });
-};
+}: QueryParam): Promise<TrafficCamera[]> =>
+  fetchFromApi(`${API_URL}/traffic`, { dateTime });
 
-export const fetchWeatherForecast = async ({
+export const fetchWeatherForecast = ({
   dateTime,
-}: QueryParam): Promise<Forecast[]> => {
-  return fetchFromApi(`${API_URL}/weather`, { dateTime });
-};
+}: QueryParam): Promise<Forecast[]> =>
+  fetchFromApi(`${API_URL}/weather`, { dateTime });
