@@ -7,10 +7,15 @@
   "scripts": {
     "build": "lerna run build",
     "start": "lerna run start --stream",
-    "dev": "lerna run dev --stream"
+    "dev": "lerna run dev --stream",
+    "vercel-build": "pnpm build"
   },
-  "dependencies": {},
   "devDependencies": {
-    "lerna": "^7.0.2"
+    "husky": "^9.0.11",
+    "lerna": "^7.0.2",
+    "lint-staged": "^15.2.2"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,md,mdx,css}": "prettier --write"
   }
 }
