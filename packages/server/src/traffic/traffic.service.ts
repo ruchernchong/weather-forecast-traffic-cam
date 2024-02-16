@@ -15,74 +15,67 @@ export class TrafficService {
   ) {}
   private cameras: TrafficCamera[] = [];
 
-  getLocationFromCoordinates(location: Location): Promise<string> {
-    return this.httpService.axiosRef
-      .get(`${OPENSTREETMAP_API_URL}/reverse`, {
+  async getLocationFromCoordinates(location: Location): Promise<string> {
+    const { data } = await this.httpService.axiosRef.get(
+      `${OPENSTREETMAP_API_URL}/reverse`,
+      {
         params: {
           lat: location.latitude,
           lon: location.longitude,
           format: 'json',
         },
-      })
-      .then(({ data }) => data.display_name);
+      },
+    );
+
+    return data.display_name;
   }
 
   async getTrafficCameras(dateTime?: string): Promise<TrafficCamera[]> {
-    this.cameras = await this.httpService.axiosRef
-      .get(
-        `${DATA_GOV_SG_API_URL}/transport/traffic-images?date_time=${dateTime}`,
-      )
-      .then(async ({ data }) => {
-        const cameras: TrafficCamera[] = data.items
-          .find(({ cameras }) => cameras)
-          // For demo purposes, I will slice the dataset into smaller one
-          .cameras.slice(0, 20);
+    const existingAddresses = await this.addressModel.find().exec();
+    console.log(`existingAddresses`, existingAddresses.length);
+    const existingAddressesMap = new Map<string, Address>(
+      existingAddresses.map((address) => [address.cameraId, address]),
+    );
 
-        const addressTable = await this.addressModel.find().exec();
-        // const isAddressUpdated = addressTable.every(
-        //   ({ displayName }) => displayName,
-        // );
+    const { data } = await this.httpService.axiosRef.get(
+      `${DATA_GOV_SG_API_URL}/transport/traffic-images?date_time=${dateTime}`,
+    );
 
-        // if (
-        //   addressTable.length === 0 ||
-        //   cameras.length !== addressTable.length ||
-        //   !isAddressUpdated
-        // ) {
-        //   await Promise.all(
-        //     cameras.map(async (camera) => {
-        //       const displayName: string = await this.getLocationFromCoordinates(
-        //         camera.location,
-        //       );
-        //
-        //       const address = new this.addressModel({
-        //         cameraId: camera.camera_id,
-        //         displayName,
-        //       });
-        //
-        //       return address.save();
-        //     }),
-        //   );
-        // }
+    const cameras: TrafficCamera[] = data.items.find(
+      ({ cameras }) => cameras,
+    )?.cameras;
+    console.log(`cameras`, cameras.length);
 
-        return filterByUniqueLocation(
-          cameras.map((camera) => {
-            const formattedAddress = addressTable.find(
-              (address) => camera.camera_id === address.cameraId,
-            )?.displayName;
+    const newCameras: TrafficCamera[] = [];
+    await Promise.all(
+      cameras.map(async (camera) => {
+        if (!existingAddressesMap.has(camera.camera_id)) {
+          const displayName = await this.getLocationFromCoordinates(
+            camera.location,
+          );
+          const address = new this.addressModel({
+            cameraId: camera.camera_id,
+            displayName,
+          });
 
-            return {
-              ...camera,
-              formattedAddress,
-            };
-          }),
-        ).sort(sortFormattedAddress);
-      })
-      .catch((error) => {
-        console.error(error);
-        return [];
-      });
+          await address.save();
+          newCameras.push(camera);
+        }
+      }),
+    );
+    console.log(`newCameras`, newCameras);
+    console.log(`newCameras`, newCameras.length);
 
-    return this.cameras;
+    const mappedCameras = cameras.map((camera) => {
+      const existingAddress = existingAddressesMap.get(camera.camera_id);
+      return { ...camera, formattedAddress: existingAddress?.displayName };
+    });
+
+    const allCameras = [...mappedCameras, ...newCameras];
+    console.log(`allCameras`, allCameras.length);
+    console.log(filterByUniqueLocation(allCameras).sort(sortFormattedAddress));
+
+    return filterByUniqueLocation(allCameras).sort(sortFormattedAddress);
   }
 
   async getTrafficCameraById(id: string): Promise<TrafficCamera> {
