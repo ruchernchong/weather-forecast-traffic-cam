@@ -9,6 +9,8 @@ import { WeatherService } from './weather.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 
 import { Weather } from '../interfaces';
+import { format } from 'date-fns';
+import { formatDateToISOString } from '../utils';
 
 @Controller('weather')
 @UseInterceptors(CacheInterceptor)
@@ -17,7 +19,11 @@ export class WeatherController {
 
   @Get()
   @Header('Cache-Control', 'public,max-age:86400')
-  getForecasts(@Query('dateTime') dateTime: string): Promise<Weather[]> {
+  getForecasts(@Query('dateTime') dateTime?: string): Promise<Weather[]> {
+    const now = new Date();
+    if (!dateTime) {
+      dateTime = formatDateToISOString(now);
+    }
     return this.weatherService.getForecasts(dateTime);
   }
 }

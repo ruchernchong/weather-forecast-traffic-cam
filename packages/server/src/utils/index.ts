@@ -1,4 +1,5 @@
 import { TrafficCamera } from '../interfaces';
+import { format } from 'date-fns';
 
 export const filterByUniqueLocation = (locations: TrafficCamera[]) =>
   [
@@ -13,3 +14,6 @@ export const sortFormattedAddress = (a: TrafficCamera, b: TrafficCamera) => {
 
   return addressA.localeCompare(addressB);
 };
+
+export const formatDateToISOString = (date: Date) =>
+  format(date, "yyyy-MM-dd'T'HH:mm:ss");

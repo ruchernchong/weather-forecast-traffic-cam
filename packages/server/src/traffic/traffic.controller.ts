@@ -9,6 +9,7 @@ import {
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { TrafficService } from './traffic.service';
 import { TrafficCamera } from '../interfaces';
+import { formatDateToISOString } from '../utils';
 
 @Controller('traffic')
 @UseInterceptors(CacheInterceptor)
@@ -20,6 +21,10 @@ export class TrafficController {
   getTrafficCameras(
     @Query('dateTime') dateTime: string,
   ): Promise<TrafficCamera[]> {
+    const now = new Date();
+    if (!dateTime) {
+      dateTime = formatDateToISOString(now);
+    }
     return this.trafficService.getTrafficCameras(dateTime);
   }
 
