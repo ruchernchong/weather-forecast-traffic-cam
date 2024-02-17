@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Header,
-  Param,
-  Query,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { TrafficService } from './traffic.service';
 import { TrafficCamera } from '../interfaces';
@@ -17,7 +10,6 @@ export class TrafficController {
   constructor(private readonly trafficService: TrafficService) {}
 
   @Get()
-  @Header('Cache-Control', 'public,max-age:86400')
   getTrafficCameras(
     @Query('dateTime') dateTime: string,
   ): Promise<TrafficCamera[]> {
