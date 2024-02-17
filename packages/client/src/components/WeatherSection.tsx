@@ -2,9 +2,9 @@ import Skeleton from "react-loading-skeleton";
 import Card from "./Card.tsx";
 import type { Forecast } from "../types";
 
-type WeatherForecastProps = {
+interface WeatherForecastProps {
   forecasts: Forecast[];
-};
+}
 
 const WeatherSection = ({ forecasts }: WeatherForecastProps) => {
   return (

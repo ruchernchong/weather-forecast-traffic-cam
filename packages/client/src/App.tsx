@@ -23,23 +23,22 @@ const App = () => {
   const [selectedTrafficCamera, setSelectedTrafficCamera] =
     useState<TrafficCamera>();
 
+  const formattedDateTime = dayjs(`${dateTime?.date} ${dateTime?.time}`).format(
+    "YYYY-MM-DDTHH:mm:ss",
+  );
+
   useEffect(() => {
-    const formattedDateTime = dayjs(
-      `${dateTime?.date} ${dateTime?.time}`,
-    ).format("YYYY-MM-DDTHH:mm:ss");
+    const fetchTrafficAndWeather = () =>
+      Promise.all([
+        fetchTrafficCameras({ dateTime: formattedDateTime }),
+        fetchWeatherForecast({ dateTime: formattedDateTime }),
+      ]);
 
-    fetchTrafficCameras({
-      dateTime: formattedDateTime,
-    }).then((cameras: TrafficCamera[]) => {
-      setTrafficCameras(cameras);
+    fetchTrafficAndWeather().then(([trafficCameras, weatherForecasts]) => {
+      setTrafficCameras(trafficCameras);
+      setWeatherForecasts(weatherForecasts);
     });
-
-    fetchWeatherForecast({
-      dateTime: formattedDateTime,
-    }).then((weatherForecast: Forecast[]) => {
-      setWeatherForecasts(weatherForecast);
-    });
-  }, [dateTime?.date, dateTime?.time]);
+  }, [formattedDateTime]);
 
   useEffect(() => {
     if (!selectedTrafficCamera && trafficCameras.length > 0) {
@@ -68,14 +67,10 @@ const App = () => {
   );
 
   useEffect(() => {
-    let updatedTrafficCamera: TrafficCamera | undefined;
-
-    if (selectedTrafficCamera) {
-      updatedTrafficCamera = trafficCameras.find(
-        ({ formattedAddress }: Pick<TrafficCamera, "formattedAddress">) =>
-          formattedAddress === selectedTrafficCamera.formattedAddress,
-      );
-    }
+    const updatedTrafficCamera = trafficCameras.find(
+      (camera) =>
+        camera.formattedAddress === selectedTrafficCamera?.formattedAddress,
+    );
 
     if (updatedTrafficCamera) {
       setSelectedTrafficCamera(updatedTrafficCamera);
