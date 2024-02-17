@@ -32,7 +32,6 @@ export class TrafficService {
 
   async getTrafficCameras(dateTime?: string): Promise<TrafficCamera[]> {
     const existingAddresses = await this.addressModel.find().exec();
-    console.log(`existingAddresses`, existingAddresses.length);
     const existingAddressesMap = new Map<string, Address>(
       existingAddresses.map((address) => [address.cameraId, address]),
     );
@@ -44,7 +43,6 @@ export class TrafficService {
     const cameras: TrafficCamera[] = data.items.find(
       ({ cameras }) => cameras,
     )?.cameras;
-    console.log(`cameras`, cameras.length);
 
     const newCameras: TrafficCamera[] = [];
     await Promise.all(
@@ -63,8 +61,6 @@ export class TrafficService {
         }
       }),
     );
-    console.log(`newCameras`, newCameras);
-    console.log(`newCameras`, newCameras.length);
 
     const mappedCameras = cameras.map((camera) => {
       const existingAddress = existingAddressesMap.get(camera.camera_id);
@@ -72,8 +68,6 @@ export class TrafficService {
     });
 
     const allCameras = [...mappedCameras, ...newCameras];
-    console.log(`allCameras`, allCameras.length);
-    console.log(filterByUniqueLocation(allCameras).sort(sortFormattedAddress));
 
     return filterByUniqueLocation(allCameras).sort(sortFormattedAddress);
   }
