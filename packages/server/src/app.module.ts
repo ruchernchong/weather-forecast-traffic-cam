@@ -11,7 +11,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
   imports: [
     CacheModule.register({ isGlobal: true }),
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.DATABASE_URL),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     TrafficModule,
     WeatherModule,
   ],
